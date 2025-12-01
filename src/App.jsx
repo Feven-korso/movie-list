@@ -1,11 +1,24 @@
-import './App.css'
+import { Routes, Route } from 'react-router-dom';
+import './css/App.css'
 import Home from './pages/home';
+import Favorites from './pages/favorites';
+import NavBar from './components/NavBar';
+
 
 
 function App() {
-  return( <>
- <Home></Home>
- </>)
+  return(
+    <div>
+      <NavBar/>
+      <main>
+      <Routes>
+        <Route path='/' element={<Home/>}/>
+        <Route path='/favorites' element={<Favorites/>} />
+      </Routes>
+    </main>
+    </div>
+    
+  )
 }
 
 export default App;
