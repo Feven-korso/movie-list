@@ -27,44 +27,25 @@ function Home() {
     const handleSearch = async (e) => {
         e.preventDefault();
         
-        if (!searchQuery.trim()) {
-            // If search is empty, reload popular movies
+        if (!searchQuery.trim()) return
+        if (loading) return
+        
+        setLoading(true)
+
+        
+            
             try {
-                setLoading(true);
-                const popularMovies = await getPopularMovies();
-                setMovies(popularMovies);
-                setError(null);
+               const searchResults = await searchMovies(searchQuery)
+               setMovies(searchResults)
+               setError(null)
             } catch (err) {
                 setError("Failed to load movies...");
             } finally {
                 setLoading(false);
             }
-            return;
-        }
-
-        try {
-            setLoading(true);
-            const searchResults = await searchMovies(searchQuery);
-            setMovies(searchResults);
-            setError(null);
-        } catch (err) {
-            console.log(err);
-            setError("Failed to search movies...");
-            // Optionally reload popular movies on error
-            const popularMovies = await getPopularMovies();
-            setMovies(popularMovies);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    if (loading) {
-        return <div className="home">Loading movies...</div>;
-    }
-
-    if (error) {
-        return <div className="home">{error}</div>;
-    }
+          
+    };   
+        
 
     return (
         <div className="home">
@@ -78,11 +59,13 @@ function Home() {
                 />
                 <button type="submit" className="search-button">Search</button>
             </form>
-            <div className="movie-grid">
+        {error && <div className="error-message">{error}</div>}
+        {loading ? (<div className="loading">loading...</div>) : (  <div className="movies-grid">
                 {movies.map(movie => ( // Fixed: movies.map instead of movie.map
                     <MovieCard movie={movie} key={movie.id} />
                 ))}
-            </div>
+            </div>)}
+          
         </div>
     );
 }

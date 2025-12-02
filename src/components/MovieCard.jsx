@@ -1,4 +1,5 @@
-import "../css/MovieCard.css"
+import "../css/MovieCard.css";
+
 function MovieCard({ movie }) {
   function onFavoriteClick() {
     alert("clicked");
@@ -7,7 +8,14 @@ function MovieCard({ movie }) {
   return (
     <div className="movie-card">
       <div className="movie-poster">
-        <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} />
+        <img 
+          src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} 
+          alt={movie.title} 
+          onError={(e) => {
+            e.target.src = "https://via.placeholder.com/500x750?text=No+Image";
+            e.target.onerror = null;
+          }}
+        />
 
         <div className="movie-overlay">
           <button className="favorite-btn" onClick={onFavoriteClick}>
@@ -16,8 +24,10 @@ function MovieCard({ movie }) {
         </div>
       </div>
 
-      <h3>{movie.title}</h3>
-      <p> {movie.release_date}</p>
+      <div className="movie-info">
+        <h3>{movie.title}</h3>
+        <p>{movie.release_date?.split("-")[0]}</p>
+      </div>
     </div>
   );
 }
